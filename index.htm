@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="mobile-web-app-capable" content="yes">
     <title>
-        Multi-Instance Syringe Pose Estimation - HackMD
+        Multi-Instance Syringe Pose Estimation: Minimal Version - HackMD
     </title>
     <link rel="icon" type="image/png" href="https://hackmd.io/favicon.png">
     <link rel="apple-touch-icon" href="https://hackmd.io/apple-touch-icon.png">
@@ -57,63 +57,58 @@
 <style></style><style></style><style id="LLPlatform"></style></head>
 
 <body><div id="shadowLL"><link rel="stylesheet" type="text/css" href="index_files/sciteFont.css"><div id="shadowLL"></div></div>
-    <div id="doc" class="markdown-body container-fluid comment-inner comment-enabled has-comment" data-hard-breaks="true" lang="en-US"><h1 style="text-align: center" id="Multi-Instance-Syringe-Pose-Estimation" data-id="Multi-Instance-Syringe-Pose-Estimation"><a class="anchor hidden-xs" href="#Multi-Instance-Syringe-Pose-Estimation" title="Multi-Instance-Syringe-Pose-Estimation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a>Multi-Instance Syringe Pose Estimation</h1><p style="text-align:center; font-weight:200; font-size: 22px; margin-bottom: 0">
+    <div id="doc" class="markdown-body container-fluid comment-inner no-highlight-all comment-enabled" data-hard-breaks="true" lang="en-US"><h1 style="text-align: center; padding-top: 20pt" id="Multi-Instance-Syringe-Pose-Estimation" data-id="Multi-Instance-Syringe-Pose-Estimation"><a class="anchor hidden-xs" href="#Multi-Instance-Syringe-Pose-Estimation" title="Multi-Instance-Syringe-Pose-Estimation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a>Multi-Instance Syringe Pose Estimation</h1><p style="text-align:center; font-weight:200; font-size: 22px; margin-bottom: 0">
     Karol Sperczyński<sup>1,2</sup>, Gabriel Tertelici<sup>1,2</sup>, Johnny Wu<sup>1</sup>
     </p><p style="text-align:center; font-weight:500; font-size: 17px; margin-bottom: 0">
     DSAIT 4125 Computer Vision @ TU Delft
     </p><p style="text-align:center; font-weight:100; font-size: 15px; margin-bottom: 0">
     <sup>1</sup>TU Delft, <sup>2</sup>Neollie B.V
     </p><p style="text-align:center; font-weight:100; font-size: 15px">
-    2 April 2026
-    </p><h2 id="1-Introduction" data-id="1-Introduction"><a class="anchor hidden-xs" href="#1-Introduction" title="1-Introduction"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>1. Introduction</span></h2><p><span>In </span><a href="https://www.stanfordchildrens.org/en/topic/default?id=the-neonatal-intensive-care-unit-nicu-90-P02389" target="_blank" rel="noopener"><span class="ui-comment-inline-span">neonatal intensive care units (NICUs)</span></a><span>,
+    7 April 2026
+    </p><h2 id="1-Introduction" data-id="1-Introduction"><a class="anchor hidden-xs" href="#1-Introduction" title="1-Introduction"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>1. Introduction</span></h2><p><span>In </span><a href="https://www.stanfordchildrens.org/en/topic/default?id=the-neonatal-intensive-care-unit-nicu-90-P02389" target="_blank" rel="noopener"><span>neonatal intensive care units (NICUs)</span></a><span>,
  neonatal patients require highly specialized and precise nutrition for 
 feeding. This requires a level of accuracy on the order of singular 
 milliliters of feed per each dose of food. At the same time, the (often 
 premature) patients receive this feed via </span><a href="https://my.clevelandclinic.org/health/treatments/21098-tube-feeding--enteral-nutrition" target="_blank" rel="noopener"><span>an enteral tube</span></a><span>.
  To facilitate this, hospitals prepare feeds for NICU patients into 
 small (e.g. 12ml) enteral syringes that are then connected to the 
-feeding tube and administered to the patient.</span></p><p><span>In the end, the preparation is highly manual, and composed of the following steps:</span></p><ol style="padding-left: 2em;">
+feeding tube and administered to the patient.</span></p><p><span>The preparation is composed of the following steps:</span></p><ol style="padding-left: 2em;">
 <li><ins><span>Retrieve empty syringes from storage</span></ins><span> 📌</span></li>
 <li><span>Retrieve bottles with milk from storage</span></li>
 <li><span>Mix powder into bottles with milk</span></li>
 <li><span>Dose the mix (feed) into syringes</span></li>
-</ol><p><span>Currently, this preparation relies almost entirely on 
-manual labor by nursing staff, with the process being repetitive, 
-time-consuming, and highly prone to human error. Additionally, ongoing 
-nurse shortages severely limit the time hospital staff have available 
-for these manual tasks.</span></p><h3 id="11-Project-Background" data-id="11-Project-Background"><a class="anchor hidden-xs" href="#11-Project-Background" title="11-Project-Background"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>1.1. Project Background</span></h3><p><span>A solution to the problem introduced above </span><a href="https://www.tudelft.nl/en/innovation-impact/pioneering-tech/articles/default-ed1d620c2f/how-neollie-is-automating-milk-preparation-in-hospitals" target="_blank" rel="noopener"><span>is currently being developed by Neollie B.V.</span></a><span>
- as part of the NEOPERFECT project, in collaboration with the RoboHouse 
-field lab. We dedicate our Computer Vision project to building a 
-solution that supports </span><strong><span>step #1</span></strong><span> in the process above, leveraging the fact that two of our team members, </span><em><span>Karol Sperczyński</span></em><span> and </span><em><span>Gabriel Tertelici</span></em><span>, are amongst the </span><a href="https://neollie.com/" target="_blank" rel="noopener"><span>Neollie</span></a><span> founders.</span></p><p><span>One of the underlying issues with this </span><strong><span>step #1</span></strong><span>
- is that syringes are input to the machine in bulk, and as such at 
-unknown positions and orientations. To solve it, we developed two 
-computer vision models that can estimate the pose and location of 
-multiple syringes in a photo frame taken by a static camera within the 
-machine.</span></p><p><span>In the final solution, the syringe 
-locations, poses and objectness scores can be fed into a control 
-algorithm that will select the most likely syringe and pick it up using a
- robotic arm.</span></p><h3 id="12-Related-Work" data-id="12-Related-Work"><a class="anchor hidden-xs" href="#12-Related-Work" title="12-Related-Work"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>1.2. Related Work</span></h3><p><span>Pose
- estimation can be used to determine not only the location but also the 
-orientation of objects in an image. While this task is usually performed
- to estimate the poses of humans, essentially predicting a human 
-skeleton, it can also be adapted to estimate the pose of an object. 
-Knowing the precise orientation of objects is especially important for 
-robot bin picking applications, as most robotic actuators are only able 
-to pick some objects from a specific angle. </span><!-- TODO: is the last sentece true, or did we mean "..., as most robotic actuators must be rotated to a specific angle to be able to pick up an object."; otherwise, it sounds like we hard-wired the axis to only pick up perfectly axis-aligned syringes --></p><p><span>Previous
- approaches to pose estimation specialized for robotic bin picking 
-leverage the fact that in industrial settings the objects being picked 
-up usually have an associated 3D model. In </span><a href="#ref1"><span>[1]</span></a><span>,
+</ol><p><span>Currently, this preparation heavily entirely on manual 
+labor by nursing staff, with the process being repetitive, 
+time-consuming, and  prone to human error. Additionally, ongoing nurse 
+shortages severely limit the time hospital staff have available for 
+these manual tasks.</span></p><h3 id="11-Project-Background" data-id="11-Project-Background"><a class="anchor hidden-xs" href="#11-Project-Background" title="11-Project-Background"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>1.1. Project Background</span></h3><p><span>A solution to the problem introduced above </span><a href="https://www.tudelft.nl/en/innovation-impact/pioneering-tech/articles/default-ed1d620c2f/how-neollie-is-automating-milk-preparation-in-hospitals" target="_blank" rel="noopener"><span>is currently being developed by Neollie B.V.</span></a><span> for the </span><a href="https://convergence.nl/neoperfect/" target="_blank" rel="noopener"><span>NEOPERFECT project</span></a><span>. We dedicate our Computer Vision project to building a solution that supports </span><strong><span>step #1📌</span></strong><span> of the process, leveraging the fact that two members of our team are amongst the </span><a href="https://neollie.com/team" target="_blank" rel="noopener"><span>Neollie</span></a><span> founders.</span></p><p><span>One of the underlying issues with </span><strong><span>step #1📌</span></strong><span>
+ is that syringes are input to the machine in bulk, at unknown positions
+ and orientations. To solve it, we developed two computer vision models 
+that can estimate the pose and location of multiple syringes in a photo 
+frame taken by a static camera within the machine.</span></p><p><span>In
+ the final solution, the predicted poses and confidence can be fed into a
+ control algorithm that will select the most likely syringe and pick it 
+up using a robotic arm.</span></p><h3 id="12-Related-Work" data-id="12-Related-Work"><a class="anchor hidden-xs" href="#12-Related-Work" title="12-Related-Work"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>1.2. Related Work</span></h3><p><span>Pose
+ estimation can be used to determine both the location and  orientation 
+of objects in an image. While this task is commonly performed to 
+estimate the poses ("skeletons") of humans, it can also be adapted to 
+estimate the poses of objects. Knowing the precise orientation of 
+objects is necessary for bin picking applications, as we must first 
+rotate the actuator to a known angle.</span></p><p><span>Previous 
+approaches to pose estimation specialized for robotic bin picking 
+leverage the fact that the objects being picked up usually have an 
+associated 3D model. In </span><a href="#ref1"><span>[1]</span></a><span>,
  the paper uses the 3D model of the object to create a database of 
-possible poses for the object, and then for a new image the closest pose
- from the database (in terms of the resulting edge and depth features) 
-is used as the new pose estimate. Such approaches have the advantage of 
-working well in high clutter scenarios, but they require a detailed 3D 
-model of the target object. These methods also do not provide keypoints 
-as output, but rather a correspondence to the precomputed database of 
-object poses.</span></p><p><span>Deep learning models for human pose 
-estimation generally consist of a feature-extractor backbone (utilising 
-convolutions or attention) combined with varying architectures for the 
-detection heads. YOLO-Pose </span><a href="#ref2"><span>[2]</span></a><span> uses a PANet </span><a href="#ref5"><span>[5]</span></a><span>
+possible poses for the object, and then for an unseen image the closest 
+pose from the database (in terms of the resulting edge and depth 
+features) is used as the new pose estimate. Such approaches have the 
+advantage of working well in high clutter scenarios, but they require a 
+detailed 3D model of the target object. These methods also do not 
+provide keypoints as output, but rather a correspondence to the 
+precomputed database of object poses.</span></p><p><span>Deep learning 
+models for human pose estimation generally consist of a 
+feature-extractor backbone (utilising convolutions or attention) 
+combined with varying architectures for the detection heads. YOLO-Pose </span><a href="#ref2"><span>[2]</span></a><span> uses a PANet </span><a href="#ref5"><span>[5]</span></a><span>
  to fuse features from multiple layers of the backbone, after which the 
 detection head predicts both a bounding box (with a center, width and 
 height) and a set of keypoints (x, y and confidence for each one). The 
@@ -136,7 +131,7 @@ computation power available during inference (lowering maximum GFLOPs)?</span></
 <li><span>Does using a model pretrained for human pose estimation and 
 fine-tuning on the syringe dataset lead to better OKS and dIoU than 
 training exclusively on the syringe dataset?</span></li>
-</ol><h2 id="2-Methodology" data-id="2-Methodology"><a class="anchor hidden-xs" href="#2-Methodology" title="2-Methodology"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2. Methodology</span></h2><h3 id="21-Syringe-Pose-Definition" data-id="21-Syringe-Pose-Definition"><a class="anchor hidden-xs" href="#21-Syringe-Pose-Definition" title="21-Syringe-Pose-Definition"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2.1 Syringe Pose Definition</span></h3><p><span>Our model is trained to identify a rigid 5-point skeleton for every syringe:</span></p><ol style="padding-left: 2em;">
+</ol><h2 id="2-Methodology" data-id="2-Methodology"><a class="anchor hidden-xs" href="#2-Methodology" title="2-Methodology"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2. Methodology</span></h2><h3 id="21-Syringe-Pose-Definition" data-id="21-Syringe-Pose-Definition"><a class="anchor hidden-xs" href="#21-Syringe-Pose-Definition" title="21-Syringe-Pose-Definition"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2.1 Syringe Pose Definition</span></h3><p><span>Our model is trained to identify a rigid 5-point skeleton for every syringe, composed of:</span></p><ol style="padding-left: 2em;">
 <li><strong><span>Tip</span></strong></li>
 <li><strong><span>Barrel</span></strong><span> (at the 15ml mark)</span></li>
 <li><strong><span>Piston End</span></strong></li>
@@ -161,66 +156,65 @@ polarity filter) positioned flush with the surface to capture
 high-fidelity images of the scene. The dataset was captured in the 
 Manual mode, with the following settings:</span></p><center>
     Table 1: Camera settings used for syringe dataset images
-<table>
-<thead>
-<tr>
-<th><span>Aperture</span></th>
-<th><span>Shutter</span></th>
-<th><span>ISO</span></th>
-<th><span>Resolution</span></th>
-<th><span>Focal Distance</span></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><span>F/8.0</span></td>
-<td><span>1/8 s</span></td>
-<td><span>100</span></td>
-<td><span>12 MP</span></td>
-<td><span>29mm</span></td>
-</tr>
-</tbody>
-</table>
-</center><p><span>From there, we manually annotated all 5 keypoints 
+</center><table style="font-size:90%; line-height: 1.25" align="center">
+    <thead>
+        <tr>
+            <th>Aperture</th>
+            <th>Shutter</th>
+            <th>ISO</th>
+            <th>Resolution</th>
+            <th>Focal Distance</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>F/8.0</td>
+            <td>1/8 s</td>
+            <td>100</td>
+            <td>12 MP</td>
+            <td>29mm</td>
+        </tr>
+    </tbody>
+</table><p><span>From there, we manually annotated all 5 keypoints 
 (including visibility flags for occluded joints) across the images. For 
 annotation, we used a self-hosted </span><a href="https://www.cvat.ai/" target="_blank" rel="noopener"><span>CVAT application</span></a><span>.</span></p><figure style="text-align:center;">
   <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 600px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_0a6cb8bcdf64a0ba3de0ea7fd5636bbf.jpg" width="600" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
   <figcaption>Figure 3: CVAT application user interface</figcaption>
-</figure><p><span>We make a distinction between occluded keypoints (e.g.
- covered by another syringe) and keypoints which are outside the image. 
-The latter is rare and a result of the crop we apply, affecting syringes
- close to the edge of the box. We differentiate between </span><em><span>left</span></em><span> and </span><em><span>right</span></em><span> flanges based on the location of the text.</span></p><h3 id="23-Data-Augmentation" data-id="23-Data-Augmentation"><a class="anchor hidden-xs" href="#23-Data-Augmentation" title="23-Data-Augmentation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2.3 Data Augmentation</span></h3><p><span>Our
+</figure><p><span>We make a distinction between occluded keypoints 
+(covered by another syringe) and keypoints located outside the image. 
+The latter is rare and results from the crop applied to the images, 
+affecting syringes close to the edge of the box. We differentiate 
+between </span><em><span>left</span></em><span> and </span><em><span>right</span></em><span> flanges based on the location of the text.</span></p><h3 id="23-Data-Augmentation" data-id="23-Data-Augmentation"><a class="anchor hidden-xs" href="#23-Data-Augmentation" title="23-Data-Augmentation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2.3 Data Augmentation</span></h3><p><span>Our
  images are first cropped to remove unnecessary background, after which 
 we apply rotation transformations to expand our base dataset of 120 
 annotated images. For the YOLO models, only 180 degree rotations were 
 applied, as this maintains the aspect ratio of the images. For the POET 
 models, we found that the network struggled to learn orientations of 
 unseen syringes given only 2x120 pictures. To mitigate this, we rotate 
-each image in increments of 5 degrees, reduce its size, and put each 
+each image in increments of 5 degrees, reduce its size, and paste each 
 rotated image on top of a grey background. Then, we crop the image down 
 to a 1:1 aspect ratio. We apply the same transformation to the labels. 
-This rotational augmentation is shown animated in Figure 4.</span></p><figure style="text-align:center;">
+The rotational augmentation is shown animated in Figure 4.</span></p><figure style="text-align:center;">
   <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 550px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_c99f85a017b14abdac4ec44ab767bd94.gif" width="550" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
   <figcaption>Figure 4: Dataset rotational augmentation visualised</figcaption>
 </figure><p><span>We split the resulting dataset into a train and 
-validation set, with 20% of the images used for validation. The split is
- done before augmentations are applied, such that all augments of an 
-image end up in the same (train or validation) set, and no data leakage 
-occurs.</span></p><h3 id="24-Training-Setup" data-id="24-Training-Setup"><a class="anchor hidden-xs" href="#24-Training-Setup" title="24-Training-Setup"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2.4 Training Setup</span></h3><h6 id="Hardware" data-id="Hardware"><a class="anchor hidden-xs" href="#Hardware" title="Hardware"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Hardware</span></h6><p><span>To train the models, we used a dedicated </span><a href="https://www.nvidia.com/en-us/data-center/grace-hopper-superchip/" target="_blank" rel="noopener"><span>Nvidia GH200</span></a><span>
- (Grace Hopper Superchip) system with 96 GB of VRAM and 525 GB RAM, 
-given that we found it to be the most cost-effective for the task. We 
-processed all data at dataloader creation, and stored it in system 
-memory to avoid high fetch latency during training, making full use of 
-available RAM.</span></p><h6 id="POET-Models" data-id="POET-Models"><a class="anchor hidden-xs" href="#POET-Models" title="POET-Models"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>POET Models</span></h6><p><span>For
+validation set, using 20% of the images for validation. The split is 
+done before augmentations are applied, such that all augments of an 
+image end up in the same (train or validation) set, avoiding data 
+leakage.</span></p><h3 id="24-Training-Setup" data-id="24-Training-Setup"><a class="anchor hidden-xs" href="#24-Training-Setup" title="24-Training-Setup"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>2.4 Training Setup</span></h3><h6 id="Hardware" data-id="Hardware"><a class="anchor hidden-xs" href="#Hardware" title="Hardware"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Hardware</span></h6><p><span>To train the models, we used a dedicated </span><a href="https://www.nvidia.com/en-us/data-center/grace-hopper-superchip/" target="_blank" rel="noopener"><span>Nvidia GH200</span></a><span>
+ system with 96 GB of VRAM and 525 GB RAM, as we found it to be the most
+ cost-effective for the task. We processed all data at dataloader 
+creation, and stored it in system memory to avoid high fetch latency 
+during training, making full use of available RAM.</span></p><h6 id="POET-Models" data-id="POET-Models"><a class="anchor hidden-xs" href="#POET-Models" title="POET-Models"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>POET Models</span></h6><p><span>For
  the final comparison we train 4 POET configurations and 6 YOLO-Pose 
 configurations, varying model size, input size and the use of a 
-pretrained backbone. All configurations can be seen below in Table 3 and
- Table 4.</span></p><center style="margin-bottom:10px; font-size: 9pt;">
-Table 3: Poet models parameters. "R"-suffix represents the Resnet-18 
+pretrained backbone. All configurations can be seen below in Table 2 and
+ Table 3.</span></p><center style="margin-bottom:10px; font-size: 9pt;">
+Table 2: Poet models parameters. "R"-suffix represents the Resnet-18 
 backbone, while the "C*"-suffix represents the custom shallow CNN 
 backbone. The N+M notation represents the number of encoder (N) and 
 decoder (M) layers. Models denoted with PT use an Imagenet-1K pretrained
- Resnet18 backbone from TorchVision <br>*Small-backbone (C*) model stopped early (target: 500) due to apparent convergence.
+ Resnet-18 backbone from TorchVision <br>*Small-backbone (C*) model stopped early (target: 500) due to apparent convergence.
 </center><table style="font-size:70%; line-height: 1.25" align="center"><thead>
   <tr>
     <th style="background-color: #DDDDDD;">Model Name</th>
@@ -232,7 +226,7 @@ decoder (M) layers. Models denoted with PT use an Imagenet-1K pretrained
   <tr>
     <td rowspan="4">POET-R Large<br>6+6</td>
       <td style="background-color: #DDDDDD;">Backbone</td>
-    <td>Resnet18</td>
+    <td>Resnet-18</td>
     <td style="background-color: #DDDDDD;">Resolution</td>
     <td>640 x 640</td>
     <td style="background-color: #DDDDDD;">type</td>
@@ -298,7 +292,7 @@ decoder (M) layers. Models denoted with PT use an Imagenet-1K pretrained
   <tr>
     <td rowspan="4">POET-R Medium<br>PT 1+3</td>
     <td style="background-color: #DDDDDD;">Backbone</td>
-    <td>Resnet18</td>
+    <td>Resnet-18</td>
     <td style="background-color: #DDDDDD;">Resolution</td>
     <td>800 x 800</td>
     <td style="background-color: #DDDDDD;">type</td>
@@ -331,7 +325,7 @@ decoder (M) layers. Models denoted with PT use an Imagenet-1K pretrained
   <tr>
     <td rowspan="4">POET-R Small<br>PT 1+1</td>
     <td style="background-color: #DDDDDD;">Backbone</td>
-    <td>Resnet18</td>
+    <td>Resnet-18</td>
     <td style="background-color: #DDDDDD;">Resolution</td>
     <td>960 x 960</td>
     <td style="background-color: #DDDDDD;">type</td>
@@ -362,7 +356,7 @@ decoder (M) layers. Models denoted with PT use an Imagenet-1K pretrained
     <td>AdamW<br>1e-4</td>
   </tr>
 </tbody></table><h6 id="YOLO-Pose-Models" data-id="YOLO-Pose-Models"><a class="anchor hidden-xs" href="#YOLO-Pose-Models" title="YOLO-Pose-Models"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>YOLO-Pose Models</span></h6><center style="margin-bottom:10px; font-size: 9pt;">
-Table 4: YOLO model parameters. Suffixes L/M/S represent YOLO-Pose model sizes. <br> Configuration files can be obtained directly from Ultralytics YOLO.
+Table 3: YOLO model parameters. Suffixes L/M/S represent YOLO-Pose model sizes. <br> Configuration files can be obtained directly from Ultralytics YOLO.
 </center><table style="font-size:70%; line-height: 1.25" align="center"><thead>
   <tr>
     <th style="background-color: #DDDDDD;">Model Name</th>
@@ -440,7 +434,7 @@ Table 4: YOLO model parameters. Suffixes L/M/S represent YOLO-Pose model sizes. 
     <td>700</td>
   </tr>
   <tr>
-    <td rowspan="2">YOLO-S</td>
+    <td rowspan="2">YOLO-M</td>
     <td style="background-color: #DDDDDD;">Pretrained?</td>
     <td>❌</td>
     <td style="background-color: #DDDDDD;">Resolution</td>
@@ -473,51 +467,35 @@ Table 4: YOLO model parameters. Suffixes L/M/S represent YOLO-Pose model sizes. 
     <td style="background-color: #DDDDDD;">epochs</td>
     <td>700</td>
   </tr>
-</tbody></table><h2 id="3-Experiments-and-Results" data-id="3-Experiments-and-Results"><a class="anchor hidden-xs" href="#3-Experiments-and-Results" title="3-Experiments-and-Results"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3. Experiments and Results</span></h2><h3 id="31-Network-Architectures-YOLO-vs-POET" data-id="31-Network-Architectures-YOLO-vs-POET"><a class="anchor hidden-xs" href="#31-Network-Architectures-YOLO-vs-POET" title="31-Network-Architectures-YOLO-vs-POET"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.1 Network Architectures (YOLO vs POET)</span></h3><p><span>For the YOLO models, we used the </span><a href="https://github.com/ultralytics/ultralytics" target="_blank" rel="noopener"><span>ultralytics</span></a><span> package to generate </span><a href="https://pytorch.org/" target="_blank" rel="noopener"><span>Pytorch</span></a><span> implementations of the pose estimation networks, to which we made no modifications.</span></p><p><span>For the POET models, we implemented them in Pytorch based on the architecture shown in </span><a href="#ref3"><span>[3]</span></a><span>.
+</tbody></table><h2 id="3-Experiments-and-Results" data-id="3-Experiments-and-Results"><a class="anchor hidden-xs" href="#3-Experiments-and-Results" title="3-Experiments-and-Results"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3. Experiments and Results</span></h2><h3 id="31-Network-Architectures" data-id="31-Network-Architectures"><a class="anchor hidden-xs" href="#31-Network-Architectures" title="31-Network-Architectures"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.1 Network Architectures</span></h3><p><span>For the YOLO models, we used the </span><a href="https://github.com/ultralytics/ultralytics" target="_blank" rel="noopener"><span>ultralytics</span></a><span> package to generate </span><a href="https://pytorch.org/" target="_blank" rel="noopener"><span>PyTorch</span></a><span> implementations of the pose estimation networks, to which we made no modifications.</span></p><p><span>For the POET models, we implemented them in Pytorch based on the architecture shown in </span><a href="#ref3"><span>[3]</span></a><span>.
  We modified the ground truth vector to use the x and y coordinates for 
 the barrel keypoint as the center, instead of the mean of visible 
 keypoints as is done in the original paper. We also modified the optimal
  set assignment to use the </span><a href="https://github.com/ivan-chai/torch-linear-assignment" target="_blank" rel="noopener"><span>torch-linear-assignment</span></a><span> package </span><a href="#ref7"><span>[7]</span></a><span>
  in order to speed up training and inference computations. The loss 
 function was modified to use binary cross-entropy instead of negative 
-log-likelihood, as we are dealing with a two class problem: background 
+log-likelihood, as we are working with a two class problem: background 
 or syringe. Furthermore, we replaced the Softmax layer with a simple 
 Sigmoid; the prediction therefore only includes the probability for the 
 syringe class. We also removed the visibility, centers and delta loss 
 components as we found they did not lead to improved performance, a 
-finding which is supported by the original POET ablations </span><a href="#ref3"><span>[3]</span></a><span>.</span></p><h3 id="32-Model-Training" data-id="32-Model-Training"><a class="anchor hidden-xs" href="#32-Model-Training" title="32-Model-Training"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.2 Model Training</span></h3><h6 id="BFloat16-vs-FP32" data-id="BFloat16-vs-FP32"><a class="anchor hidden-xs" href="#BFloat16-vs-FP32" title="BFloat16-vs-FP32"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>BFloat16 vs FP32</span></h6><p><span>We trained all POET models using standard precision (fp32). While we attempted to use </span><a href="https://en.wikipedia.org/wiki/Bfloat16_floating-point_format" target="_blank" rel="noopener"><span>BFloat16</span></a><span> quantized weights during training, we found that </span><code>cdist</code><span>, a core operation needed for the last steps of the model, does not support the lower precision, with </span><a href="https://github.com/pytorch/pytorch/issues/57707" target="_blank" rel="noopener"><span>an existing github thread pointing to excessive numerical error as the reason</span></a><span>.
- Still, we converted between bf16 and full precision (fp32) and 
-experimented with training the models, aiming for a speedup. 
-Unfortunately, we found that the model generally appeared to converge 
-prematurely at a much higher loss. We believe that the loss of precision
- associated with the lower number of bits (7) for the fraction part 
-causes finer gradient steps to disappear as the gradient passes through 
-the </span><code>cdist</code><span> computation step.</span></p><h6 id="Normalization" data-id="Normalization"><a class="anchor hidden-xs" href="#Normalization" title="Normalization"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Normalization</span></h6><p><span>For the POET models, to match the normalization used by the ResNet backbone pretrained on ImageNet </span><a href="#ref8"><span>[8]</span></a><span>, we first rescaled the pixel values to floats in the range </span><span class="mathjax raw">\([0, 1]\)</span><span>, and then applied the same mean and standard deviation normalization, namely using means of </span><span class="mathjax raw">\((0.485, 0.456, 0.406)\)</span><span> and standard deviations of </span><span class="mathjax raw">\((0.229, 0.224, 0.225)\)</span><span>.</span></p><p><span>All
- models were trained until they appeared to not improve in terms of 
-train loss, and the specific number of epochs used for each model can be
- found in the tables in section 2.4.</span></p><h3 id="33-Evaluation-Metrics" data-id="33-Evaluation-Metrics"><a class="anchor hidden-xs" href="#33-Evaluation-Metrics" title="33-Evaluation-Metrics"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.3 Evaluation Metrics</span></h3><p><span>We use three metrics for evaluating the model's performance: the </span><strong><span>mAP</span></strong><span> (Mean Average Precision) at different </span><strong><span>OKS</span></strong><span> (Object Keypoint Similarity) thresholds, measuring the similarity between predicted and ground-truth keypoints </span><a href="#ref3"><span>[3]</span></a><span>, the </span><strong><span>dIoU</span></strong><span> </span><a href="#ref6"><span>[6]</span></a><span>
+finding which is supported by the original POET ablations </span><a href="#ref3"><span>[3]</span></a><span>.</span></p><h3 id="32-Evaluation-Metrics" data-id="32-Evaluation-Metrics"><a class="anchor hidden-xs" href="#32-Evaluation-Metrics" title="32-Evaluation-Metrics"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.2 Evaluation Metrics</span></h3><p><span>We use three metrics for evaluating the model's performance: the </span><strong><span>mAP</span></strong><span> (Mean Average Precision) at different </span><strong><span>OKS</span></strong><span> (Object Keypoint Similarity) thresholds, measuring the similarity between predicted and ground-truth keypoints </span><a href="#ref3"><span>[3]</span></a><span>, the </span><strong><span>dIoU</span></strong><span> </span><a href="#ref6"><span>[6]</span></a><span>
  which measures how accurately the model finds the overall center of the
  syringe's bounding box through the center's differences, and our custom
  </span><strong><span>Syringe IoU</span></strong><span> metric. The 
 latter fits a tight axis-aligned bounding box formed by the skeleton of 
 the 5 predicted keypoints (tip, barrel, piston, left-flange, 
 right-flange) and calculates the IoU against the corresponding derived 
-bounding box from the ground-truth keypoints.</span></p><h3 id="34-Quantitative-Results" data-id="34-Quantitative-Results"><a class="anchor hidden-xs" href="#34-Quantitative-Results" title="34-Quantitative-Results"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.4 Quantitative Results</span></h3><h6 id="POET" data-id="POET"><a class="anchor hidden-xs" href="#POET" title="POET"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>POET</span></h6><p><span>All
+bounding box from the ground-truth keypoints.</span></p><h3 id="33-Quantitative-Results" data-id="33-Quantitative-Results"><a class="anchor hidden-xs" href="#33-Quantitative-Results" title="33-Quantitative-Results"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.3 Quantitative Results</span></h3><h6 id="POET" data-id="POET"><a class="anchor hidden-xs" href="#POET" title="POET"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>POET</span></h6><p><span>All
  POET benchmarks were conducted on a validation set of 1,728 images, and
  the numerical results of this evaluation using the metrics in Section 
-3.3 are shown below in Table 5. Of the POET variants, the custom 
+3.2 are shown below in Table 4. Of the POET variants, the custom 
 small-CNN backbone model (</span><strong><span>POET-C Large 6+6</span></strong><span>)
  performed best, obtaining highest validation mAP, dIoU and Syringe IoU.
  Of the POET models, the ones with smaller encoder/decoder stacks run 
 inference much faster, achieving near-realtime results without 
 quantization.</span></p><center style="font-size: 9pt;margin-bottom:10px;">
-Table 5: Comparison of POET's model accuracy and computation requirements
-<!-- | Architecture | Params | Compute (GFLOPs) | Inference Latency | Est. FPS | mAP (OKS 50-95) | DIoU | Syringe IoU |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **POET-C Large 6+6** | 32.24 M | 392.92 | 164.37 ms | ~6.08 | 0.0548 | 0.3683 | 0.5530 |
-| **POET-R Large 6+6** | 56.68 M | 81.72 | 151.25 ms | ~6.61 | 0.0064 | 0.3470 | 0.4242 |
-| **POET-R Medium PT 1+3** | 18.04 M | 95.93 | 72.54 ms | ~13.79 | 0.0091 | 0.3484 | 0.4383 |
-| **POET-R Small PT 1+1** | 14.88 M | 136.7 | 48.46 ms | ~20.63 | 0.0002 | 0.3431 | 0.3950 | -->
+Table 4: Comparison of POET's model accuracy and computation requirements
 </center><table style="font-size:70%; line-height: 1.25" align="center">
     <thead>
         <tr>
@@ -575,8 +553,8 @@ Table 5: Comparison of POET's model accuracy and computation requirements
     </tbody>
 </table><p><span>However, the POET model family appears to highly 
 overfit on the data, achieving much higher mAP on training as compared 
-to the validation set, as can be seen in Table 6.</span></p><center style="font-size: 9pt;margin-bottom:10px;">
-Table 6: Train-validation comparison for POET models (training n=6912 / validation n=1728)
+to the validation set, as can be seen in Table 5.</span></p><center style="font-size: 9pt;margin-bottom:10px;">
+Table 5: Train-validation comparison for POET models (training n=6912 / validation n=1728)
 </center><table style="font-size:90%; line-height: 1.25" align="center">
     <thead>
         <tr>
@@ -631,17 +609,9 @@ Table 6: Train-validation comparison for POET models (training n=6912 / validati
  models were evaluated on a validation set of 48 images (20% of YOLO 
 data). All YOLO models outperform the POET models in terms of mAP, dIoU 
 and Syringe IoU. Pretrained models achieve higher mAP than 
-non-pretrained ones, and YOLO Large performs the best overall, but with a
- small margin to the other pretrained models.</span></p><center style="font-size: 9pt;margin-bottom:10px;">
-Table 7: Comparison of YOLO's model accuracy and computation requirements
-<!-- | Architecture | Params | Compute (GFLOPs) | Inference Latency | Est. FPS | mAP (OKS 50-95) | DIoU | Syringe IoU |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **YOLO Large** | 25.59 M | 398.76 | 97.46 ms | ~10.20 | 0.421 | 0.868 | 0.794 |
-| **YOLO Large (Pre-Trained)** | 25.59 M | 398.76 | 98.00 ms | ~10.20 | 0.893 | 0.921 | 0.913 |
-| **YOLO Medium** | 21.20 M | 304.79 | 79.99 ms | ~12.50 | 0.877 | 0.908 | 0.900 |
-| **YOLO Medium (Pre-Trained)** | 21.20 M | 304.79 | 79.12 ms | ~12.64 | 0.903 | 0.926 | 0.912 |
-| **YOLO Small** | 9.75 M | 93.72 | 33.92 ms | ~29.48 | 0.510 | 0.905 | 0.873 |
-| **YOLO Small (Pre-Trained)** | 9.75 M | 93.72 | 34.03 ms | ~29.39 | 0.896 | 0.927 | 0.910 | -->
+non-pretrained ones, and YOLO Large performs best overall, but with a 
+small margin to the other pretrained models.</span></p><center style="font-size: 9pt;margin-bottom:10px;">
+Table 6: Comparison of YOLO's model accuracy and computation requirements
 </center><table style="font-size:80%; line-height: 1.25" align="center">
     <thead>
         <tr>
@@ -717,11 +687,11 @@ Table 7: Comparison of YOLO's model accuracy and computation requirements
             <td>0.892</td>
         </tr>
     </tbody>
-</table><p><span>Inference for numerical results was conducted using PyTorch's MPS on an </span><strong><span>Apple Silicon M4 with 24 GB of Unified Memory</span></strong><span>.</span></p><h3 id="35-Qualitative-Results" data-id="35-Qualitative-Results"><a class="anchor hidden-xs" href="#35-Qualitative-Results" title="35-Qualitative-Results"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.5 Qualitative Results</span></h3><p><span>In
- this section, we plot both models' predictions for a few representative
- scenarios. Only syringes with predicted confidence &gt;80% are plotted,
- given that both YOLO and POET appear to occasionally predict correct 
-locations with confidence in the range </span><span class="mathjax raw">\((0.8, 0.9]\)</span><span>.</span></p><h6 id="POET23" data-id="POET"><a class="anchor hidden-xs" href="#POET23" title="POET23"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>POET</span></h6><p><span>First,
+</table><p><span>Inference for numerical results was conducted using PyTorch's MPS on an </span><strong><span>Apple Silicon M4 with 24 GB of Unified Memory</span></strong><span>.</span></p><h3 id="34-Qualitative-Results" data-id="34-Qualitative-Results"><a class="anchor hidden-xs" href="#34-Qualitative-Results" title="34-Qualitative-Results"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>3.4 Qualitative Results</span></h3><p><span>In
+ this section, we plot both models' predictions for a few selected 
+scenarios. Only syringes with predicted confidence &gt;80% are plotted, 
+given that both YOLO and POET appear to occasionally predict correct 
+locations with confidence in the range (0.8, 0.9].</span></p><h6 id="POET20" data-id="POET"><a class="anchor hidden-xs" href="#POET20" title="POET20"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>POET</span></h6><p><span>First,
  Figure 5 shows that our selected POET-C Large 6+6 model predicts the 
 keypoint locations close to the visual ground truth when evaluated on a </span><strong><span>training set</span></strong><span> image, both for cases with few syringes (Left) and many syringes (Right).</span></p><figure style="text-align:center;">
   <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 300px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_f2aaed7a5fe713f3a4b72f5b99df472a.png" width="300" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
@@ -733,7 +703,7 @@ predictions for pictures with small numbers of syringes still appear to
 be close to the ground truth, but pictures with large clutter are 
 mislabeled by the model. We note that this observation correlates with 
 the POET scores stratified into different clutter levels, provided as an
- extra in Appendix A.3.</span></p><figure style="text align:center;">
+ extra in Appendix A.1.</span></p><figure style="text align:center;">
     <center>
 <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 200px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_e0dbb3b6bcba041b41958bb32907ff8b.png" width="200" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
 <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 200px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_de4a24b416d173de696698cc46eb1614.png" width="200" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
@@ -774,18 +744,18 @@ Figure 11.</span></p><figure style="text-align:center;">
 Pretrained model (Left) and Non-Pretrained model (Right). Predicted 
 keypoints are similar.</figcaption>
 </figure><h2 id="4-Discussion" data-id="4-Discussion"><a class="anchor hidden-xs" href="#4-Discussion" title="4-Discussion"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>4. Discussion</span></h2><p><span>In
- the preceding sections, we noted the results of the experiments, and in
- this section we discuss how these results compare between the models.</span></p><h6 id="Architecture-with-Best-mAP-and-dIoU" data-id="Architecture-with-Best-mAP-and-dIoU"><a class="anchor hidden-xs" href="#Architecture-with-Best-mAP-and-dIoU" title="Architecture-with-Best-mAP-and-dIoU"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Architecture with Best mAP and dIoU</span></h6><p><span>We
+ this Section, we analyse the results of the models, answer the Research
+ Questions, and hypothesize about the causes of our findings.</span></p><h6 id="Architecture-with-Best-mAP-and-dIoU" data-id="Architecture-with-Best-mAP-and-dIoU"><a class="anchor hidden-xs" href="#Architecture-with-Best-mAP-and-dIoU" title="Architecture-with-Best-mAP-and-dIoU"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Architecture with Best mAP and dIoU</span></h6><p><span>We
  find that YOLO-Pose models significantly outperform POET models for 
 quantitative metrics (0.861 vs 0.0548 mAP, 0.905 vs 0.3683 dIoU). Out of
  the YOLO-Pose models, the large sized model performs the best (0.861 
 mAP), with the medium and small models being close (0.855 and 0.858 mAP 
-respectively). The selective qualitative results shown in Section 3.5 
+respectively). The selective qualitative results shown in Section 3.4 
 support these findings, visualising the poor generalization of the POET 
 beyond a few syringes and confirming that the similar mAP scores for 
 pre-trained YOLO (S/M/L) models carry over to similar predictions after 
 plotting.</span></p><p><span>Given the poor generalisation of the POET 
-model, and its apparent overfitting to the data (seen in Section 3.5), 
+model, and its apparent overfitting to the data (seen in Section 3.4), 
 we speculate that the model struggles to learn a general formula for the
  placement and orientation of syringes, especially in high-clutter 
 scenarios, for arrangements not seen during training. We note that for a
@@ -833,32 +803,7 @@ inference are limited, YOLO-Small is the ideal choice. We also find that
  using pretrained models for YOLO leads to better scores than training 
 exclusively on the syringe dataset. Finally the POET, transformer based 
 model, does not generalize when trained on the syringe dataset, even 
-when considering additional rotation-based augmentations.</span></p><h2 id="6-Future-Works" data-id="6-Future-Works"><a class="anchor hidden-xs" href="#6-Future-Works" title="6-Future-Works"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>6. Future Works</span></h2><p><span>First,
- a significant domain gap in our current methodology is training on 
-high-fidelity DSLR images. The final computer vision pipeline is 
-intended for deployment on a standard industrial cameras </span><span class="ui-comment-inline-span">where imaging data is noisy.</span><span>
- To address this disparity, photometric transformations such as 
-artificial sensor noise, blur, and lighting shifts can be added to the 
-training set. This allows the model to learn through simulated hardware 
-noise, ultimately enabling the model to generalize across varying 
-real-world medical environments.</span></p><p><span class="ui-comment-inline-span">S</span><span>econdly,
- the developed models can be expanded by integrating both RGB and depth 
-information as input. We considered this, but hardware available for 
-this project, namely an Intel RealSense D415, produces RGB images with 
-severe glare and noise, and the depth information contains many 
-artefacts (see Figure 12). Future work could explore using better 
-sensors to get more accurate RGB and depth information, and determine 
-the impact of the extra information on model accuracy.</span></p><figure style="text-align:center;">
-  <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 250px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_92d9c1034f48e24ba8edcf0927b74d2b.png" width="250" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
-    <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 250px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_2418438d5bf45c7e8bd8cc2f191730e1.png" width="250" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
-  <figcaption>Figure 12: D415 RGB and Depth Images</figcaption>
-</figure><p><span>Moreover, to allow deployment of the developed models 
-on edge devices such as a Jetson Nano, model quantization would be 
-required. Future work could thus explore different quantization levels 
-and what impact they bring to inference time and accuracy.</span></p><p><span>Finally, </span><span class="ui-comment-inline-span">the training dataset could be expanded using images generated from a 3D model of the original syringe (as is done in </span><a href="#ref1"><span class="ui-comment-inline-span">[1]</span></a><span class="ui-comment-inline-span">).</span><span>
- The 3D model could be used in a program such as Blender to create 
-images with syringes in various poses and overlaps, and the pose 
-information would be already known.</span></p><h2 id="Acknowledgements" data-id="Acknowledgements"><a class="anchor hidden-xs" href="#Acknowledgements" title="Acknowledgements"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Acknowledgements</span></h2><p><span>This
+when considering additional rotation-based augmentations.</span></p><h2 id="Acknowledgements" data-id="Acknowledgements"><a class="anchor hidden-xs" href="#Acknowledgements" title="Acknowledgements"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Acknowledgements</span></h2><p><span>This
  work was funded through a WorkTech grant received for the NEOPERFECT 
 project consortium composed of Neollie, RoboHouse, Healthy Start and 
 Erasmus Sophia Kinderziekenhuis.</span></p><h2 id="References" data-id="References"><a class="anchor hidden-xs" href="#References" title="References"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>References</span></h2><p><a id="ref1" target="_blank" rel="noopener"></a><span>[1]
@@ -893,165 +838,13 @@ al., “Microsoft COCO: Common Objects in Context,” in Computer Vision –
 ECCV 2014, vol. 8693, D. Fleet, T. Pajdla, B. Schiele, and T. 
 Tuytelaars, Eds., in Lecture Notes in Computer Science, vol. 8693. , 
 Cham: Springer International Publishing, 2014, pp. 740–755. doi: 
-10.1007/978-3-319-10602-1_48.</span></p><h2 id="Appendix" data-id="Appendix"><a class="anchor hidden-xs" href="#Appendix" title="Appendix"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Appendix</span></h2><h3 id="A1-Dataset-Distribution" data-id="A1-Dataset-Distribution"><a class="anchor hidden-xs" href="#A1-Dataset-Distribution" title="A1-Dataset-Distribution"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>A1. Dataset Distribution</span></h3><p><span>We captured </span><strong><span>200</span></strong><span> images and the data distribution is as follows:</span></p><center>
-    Table A1: Distribution of syringe images     
+10.1007/978-3-319-10602-1_48.</span></p><h2 id="Appendix-1-POET-Per-Density-Evaluation" data-id="Appendix-1-POET-Per-Density-Evaluation"><a class="anchor hidden-xs" href="#Appendix-1-POET-Per-Density-Evaluation" title="Appendix-1-POET-Per-Density-Evaluation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Appendix 1: POET Per-Density Evaluation</span></h2><p><span>The mAP scores for different syringe densities are shown in Table A1 below.</span></p><center style="font-size: 9pt;margin-bottom:10px;">
+Table A1: mAP scores for varied syringe densities.
 </center><table style="font-size:80%; line-height: 1.25" align="center">
     <thead>
         <tr>
-            <th>Images</th>
-            <th>Syringes per Image</th>
-            <th>Description</th>
+        <td colspan="4" style="text-align: center;">Single Syringe Images (n=288)</td>
         </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>10</td>
-            <td>1</td>
-            <td>Single: Baseline</td>
-        </tr>
-        <tr>
-            <td>10</td>
-            <td>1</td>
-            <td>Single: Baseline w/ varying plunger states (1-5ml offsets)</td>
-        </tr>
-        <tr>
-            <td>20</td>
-            <td>2 - 5</td>
-            <td>Low Density: Small overlaps</td>
-        </tr>
-        <tr>
-            <td>30</td>
-            <td>6 - 15</td>
-            <td>Medium Density: Standard clinical tray clutter</td>
-        </tr>
-        <tr>
-            <td>70</td>
-            <td>16 - 25</td>
-            <td>High Density: Severe occlusion</td>
-        </tr>
-        <tr>
-            <td>60</td>
-            <td>26 - 40</td>
-            <td>Extreme Density: Massive piles, extreme occlusions &amp; hidden joints</td>
-        </tr>
-    </tbody>
-</table><p><span>However, for this project we only made use of first 120
- images, so avoiding some of the higher density and all of the extreme 
-density images.</span></p><figure style="text-align:center;">
-  <span class="image-toolbar-wrapper inline-block w-fit h-fit [&amp;:not([data-image-error])]:cursor-zoom-in" style="width: 250px; max-width: 100%; height: auto;"><div class="code-toolbar cursor-default tw-hide md:block"><div class="flex flex-row gap-0.5 rounded-lg bg-element-bg-default px-[7px] py-[5px]"><button class="rounded text-lg font-normal leading-sm flex bg-transparent text-text-default border border-solid border-transparent hocus:bg-element-bg-hover hocus:text-text-emphasize hover:border-element-bg-hover focus:shadow-[0_0_0_2px_#77777733] focus:border-element-border-hover disabled:bg-transparent disabled:hocus:bg-transparent disabled:hocus:border-transparent disabled:text-element-text-disabled disabled:hocus:text-element-text-disabled p-0.5 ui-code-block-zoom-button ui-code-block-toolbar-type-image" data-state="closed"><i class="inline-flex ph ph-magnifying-glass-plus" aria-hidden="true" style="width: 20px; height: 20px; font-size: 20px; line-height: 20px;"></i></button></div></div><img src="index_files/upload_b3d40af41a3097c148f26c4c01fe53d6.png" width="250" class="offline-handled error-handled image-toolbar-handled" style="width: 100%; height: auto; max-width: 100%; max-height: 100%;"></span>
-  <figcaption>Figure A1: Ground-truth annotation on a high-density cluster (22 syringes).</figcaption>
-</figure><h3 id="A2-Evaluation-Metrics" data-id="A2-Evaluation-Metrics"><a class="anchor hidden-xs" href="#A2-Evaluation-Metrics" title="A2-Evaluation-Metrics"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>A2. Evaluation Metrics</span></h3><h6 id="OKS-Formulation" data-id="OKS-Formulation"><a class="anchor hidden-xs" href="#OKS-Formulation" title="OKS-Formulation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>OKS Formulation</span></h6><p><span class="mathjax raw">\[OKS = \frac{\sum_i \exp\left(-\frac{d_i^2}{2 s^2 k_i^2}\right)\,\delta(v_i &gt; 0)}{\sum_i \delta(v_i &gt; 0)}\]</span><br>
-<span>- </span><span class="mathjax raw">\(d_i\)</span><span> (Distance) is the raw distance between predicted keypoint and actual keypoint</span><br>
-<span>- </span><span class="mathjax raw">\(s\)</span><span> (Scale) is 
-the object scale. This allows the metric to be scale-invariant where a 
-small pixel error is weighed more on a small object versus on a larger 
-object.</span><br>
-<span>- </span><span class="mathjax raw">\(k_i\)</span><span> 
-(Tolerance) is the labeling uncertainty and keypoint specific weights (a
- COCO constant) that weighs points that are harder to humans to label 
-accurately</span><br>
-<span>- </span><span class="mathjax raw">\(v_i\)</span><span> (Visibility) visibility flag for each keypoint.</span></p><h6 id="DIoU-Formulation" data-id="DIoU-Formulation"><a class="anchor hidden-xs" href="#DIoU-Formulation" title="DIoU-Formulation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>DIoU Formulation</span></h6><p><span class="mathjax raw">\[DIoU = IoU - \frac{\rho^2(\mathbf{b}, \mathbf{b}^{gt})}{c^2}.\]</span><br>
-<span>- </span><span class="mathjax raw">\(IoU\)</span><span> (Intersection Over Union) is the baseline overlap between the predicted and ground-truth bounding boxes</span><br>
-<span>- </span><span class="mathjax raw">\(\rho\)</span><span> 
-(Euclidean distance) is the distance between the center point of the 
-predicted box and the center point of the ground-truth box.</span><br>
-<span>- </span><span class="mathjax raw">\(c\)</span><span> (Enclosing 
-length) is the diagonal length of the smallest possible box that 
-"encloses" both the predicted and ground-truth boxes.</span></p><h3 id="A3-Additional-Experiments" data-id="A3-Additional-Experiments"><a class="anchor hidden-xs" href="#A3-Additional-Experiments" title="A3-Additional-Experiments"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>A3. Additional Experiments</span></h3><h6 id="Official-Ultralytics-OKS-Benchmark" data-id="Official-Ultralytics-OKS-Benchmark"><a class="anchor hidden-xs" href="#Official-Ultralytics-OKS-Benchmark" title="Official-Ultralytics-OKS-Benchmark"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Official Ultralytics OKS Benchmark</span></h6><p><span>These
- values are reported separately for transparency, considering that 
-Ultralytics uses its own built-in pose validation pipeline. As a result,
- the OKS values in this table are not directly comparable to the 
-shared-evaluator (via COCO's Eval API) reported in Table 7. However, 
-they do confirm the same overall ranking trends among the YOLO variants.</span></p><center style="font-size: 9pt;margin-bottom:10px;">
-Table A1: Official Ultralytics validation results for the YOLO-Pose models, obtained using model.val() on original dataset.
-</center><table style="font-size:80%; line-height: 1.25" align="center">
-    <thead>
-        <tr>
-            <th>Architecture</th>
-            <th>Params</th>
-            <th>Compute (GFLOPs)</th>
-            <th>Inference Latency</th>
-            <th>Est. FPS</th>
-            <th>mAP (OKS 50-95)</th>
-            <th>OKS (mAP@50)</th>
-            <th>OKS (mAP@75)</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>YOLO Large</td>
-            <td>25.59 M</td>
-            <td>398.76</td>
-            <td>97.46 ms</td>
-            <td>~10.26</td>
-            <td>0.730</td>
-            <td>0.981</td>
-            <td>0.713</td>
-        </tr>
-        <tr>
-            <td>YOLO Large (Pre-Trained)</td>
-            <td>25.59 M</td>
-            <td>398.76</td>
-            <td>103.66 ms</td>
-            <td>~9.65</td>
-            <td>0.979</td>
-            <td>0.994</td>
-            <td>0.980</td>
-        </tr>
-        <tr>
-            <td>YOLO Medium</td>
-            <td>21.20 M</td>
-            <td>304.79</td>
-            <td>84.94 ms</td>
-            <td>~11.77</td>
-            <td>0.966</td>
-            <td>0.992</td>
-            <td>0.963</td>
-        </tr>
-        <tr>
-            <td>YOLO Medium (Pre-Trained)</td>
-            <td>21.20 M</td>
-            <td>304.79</td>
-            <td>87.62 ms</td>
-            <td>~11.41</td>
-            <td>0.986</td>
-            <td>0.995</td>
-            <td>0.990</td>
-        </tr>
-        <tr>
-            <td>YOLO Small</td>
-            <td>9.75 M</td>
-            <td>93.72</td>
-            <td>34.94 ms</td>
-            <td>~28.62</td>
-            <td>0.760</td>
-            <td>0.991</td>
-            <td>0.754</td>
-        </tr>
-        <tr>
-            <td>YOLO Small (Pre-Trained)</td>
-            <td>9.75 M</td>
-            <td>93.72</td>
-            <td>34.93 ms</td>
-            <td>~28.63</td>
-            <td>0.986</td>
-            <td>0.995</td>
-            <td>0.992</td>
-        </tr>
-    </tbody>
-</table><h4 id="POET-Per-Density-Evaluation" data-id="POET-Per-Density-Evaluation"><a class="anchor hidden-xs" href="#POET-Per-Density-Evaluation" title="POET-Per-Density-Evaluation"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>POET: Per-Density Evaluation</span></h4><p><span>As
- observed in our experiments, the performance of POET varies depending 
-on the density of syringes presented in the image. Given that, we did a 
-density-distribution analysis.</span></p><h6 id="Density-Single-1-Syringe-Per-Image" data-id="Density-Single-1-Syringe-Per-Image"><a class="anchor hidden-xs" href="#Density-Single-1-Syringe-Per-Image" title="Density-Single-1-Syringe-Per-Image"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Density: Single (1 Syringe Per Image)</span></h6><center style="font-size: 9pt;margin-bottom:10px;">
-Table A2: Single Syringe Images (n=288)
-<!-- | Architecture | mAP (OKS 50-95) | dIoU | Syringe IoU |
-| :--- | :---: | :---: | :---: |
-| **POET-C Large 6+6**       | 0.4842 | 0.3843 | 0.8204 |
-| **POET-R Large 6+6**       | 0.3371 | 0.4008 | 0.7920 |
-| **POET-R Medium PT 1+3**   | 0.1956 | 0.3580 | 0.6356 |
-| **POET-R Small PT 1+1**    | 0.0552 | 0.3489 | 0.5384 | -->
-</center><table style="font-size:80%; line-height: 1.25" align="center">
-    <thead>
         <tr>
             <th>Architecture</th>
             <th>mAP (OKS 50-95)</th>
@@ -1084,11 +877,12 @@ Table A2: Single Syringe Images (n=288)
             <td>0.3489</td>
             <td>0.5384</td>
         </tr>
+        <tr><td colspan="4"></td></tr>
     </tbody>
-</table><h6 id="Density-Low-2-5-Syringes-Per-Image" data-id="Density-Low-2-5-Syringes-Per-Image"><a class="anchor hidden-xs" href="#Density-Low-2-5-Syringes-Per-Image" title="Density-Low-2-5-Syringes-Per-Image"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Density: Low (2-5 Syringes Per Image)</span></h6><center style="font-size: 9pt;margin-bottom:10px;">
-    Table A3: Low Density Images (n=288)
-</center><table style="font-size:80%; line-height: 1.25" align="center">
     <thead>
+        <tr>
+        <td colspan="4" style="text-align: center; border-spacing: 30px">Low Density Images (n=288)</td>
+        </tr>
         <tr>
             <th>Architecture</th>
             <th>mAP (OKS 50-95)</th>
@@ -1121,11 +915,12 @@ Table A2: Single Syringe Images (n=288)
             <td>0.3416</td>
             <td>0.4884</td>
         </tr>
+        <tr><td colspan="4"></td></tr>
     </tbody>
-</table><h6 id="Density-Medium-6-15-Syringes-Per-Image" data-id="Density-Medium-6-15-Syringes-Per-Image"><a class="anchor hidden-xs" href="#Density-Medium-6-15-Syringes-Per-Image" title="Density-Medium-6-15-Syringes-Per-Image"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Density: Medium (6-15 Syringes Per Image)</span></h6><center style="font-size: 9pt;margin-bottom:10px;">
-    Table A4: Medium Density Images (n=432)
-</center><table style="font-size:80%; line-height: 1.25" align="center">
     <thead>
+        <tr>
+        <td colspan="4" style="text-align: center; border-spacing: 30px">Medium Density Images (n=432)</td>
+        </tr>
         <tr>
             <th>Architecture</th>
             <th>mAP (OKS 50-95)</th>
@@ -1135,34 +930,35 @@ Table A2: Single Syringe Images (n=288)
     </thead>
     <tbody>
         <tr>
-            <td>**POET-C Large 6+6**</td>
+            <td>POET-C Large 6+6</td>
             <td>0.1262</td>
             <td>0.3743</td>
             <td>0.6242</td>
         </tr>
         <tr>
-            <td>**POET-R Large 6+6**</td>
+            <td>POET-R Large 6+6</td>
             <td>0.0151</td>
             <td>0.3552</td>
             <td>0.4647</td>
         </tr>
         <tr>
-            <td>**POET-R Medium PT 1+3**</td>
+            <td>POET-R Medium PT 1+3</td>
             <td>0.0180</td>
             <td>0.3467</td>
             <td>0.4646</td>
         </tr>
         <tr>
-            <td>**POET-R Small PT 1+1**</td>
+            <td>POET-R Small PT 1+1</td>
             <td>0.0039</td>
             <td>0.3350</td>
             <td>0.3899</td>
         </tr>
+        <tr><td colspan="4"></td></tr>
     </tbody>
-</table><h6 id="Density-High-16-25-Syringes-Per-Image" data-id="Density-High-16-25-Syringes-Per-Image"><a class="anchor hidden-xs" href="#Density-High-16-25-Syringes-Per-Image" title="Density-High-16-25-Syringes-Per-Image"><span class="octicon octicon-link ph ph-link-simple-horizontal"></span></a><span>Density: High (16-25 Syringes Per Image)</span></h6><center style="font-size: 9pt;margin-bottom:10px;">
-    Table A5: High Density Images (n=720)
-</center><table style="font-size:80%; line-height: 1.25" align="center">
     <thead>
+        <tr>
+        <td colspan="4" style="text-align: center; border-spacing: 30px">High Density Images (n=720)</td>
+        </tr>
         <tr>
             <th>Architecture</th>
             <th>mAP (OKS 50-95)</th>
@@ -1172,31 +968,31 @@ Table A2: Single Syringe Images (n=288)
     </thead>
     <tbody>
         <tr>
-            <td>**POET-C Large 6+6**</td>
+            <td>POET-C Large 6+6</td>
             <td>0.0284</td>
             <td>0.3649</td>
             <td>0.4899</td>
         </tr>
         <tr>
-            <td>**POET-R Large 6+6**</td>
+            <td>POET-R Large 6+6</td>
             <td>0.0012</td>
             <td>0.3385</td>
             <td>0.3562</td>
         </tr>
         <tr>
-            <td>**POET-R Medium PT 1+3**</td>
+            <td>POET-R Medium PT 1+3</td>
             <td>0.0048</td>
             <td>0.3483</td>
             <td>0.4092</td>
         </tr>
         <tr>
-            <td>**POET-R Small PT 1+1**</td>
+            <td>POET-R Small PT 1+1</td>
             <td>0.0019</td>
             <td>0.3454</td>
             <td>0.3885</td>
         </tr>
     </tbody>
-</table><h4 id="" data-id=""></h4></div>
+</table></div>
     <div class="ui-toc dropup unselectable hidden-print" style="display: none; right: 355px;">
         <div class="pull-right dropdown">
             <a id="tocLabel" class="ui-toc-label btn btn-default" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" title="Table of content">
@@ -1205,38 +1001,31 @@ Table A2: Single Syringe Images (n=288)
             <ul id="ui-toc" class="ui-toc-dropdown dropdown-menu" aria-labelledby="tocLabel">
                 <div class="toc"><ul class="nav">
 <li class="active"><a href="#Multi-Instance-Syringe-Pose-Estimation" title="Multi-Instance Syringe Pose Estimation">Multi-Instance Syringe Pose Estimation</a><ul class="nav">
-<li><a href="#1-Introduction" title="1. Introduction">1. Introduction</a><ul class="nav">
+<li class=""><a href="#1-Introduction" title="1. Introduction">1. Introduction</a><ul class="nav">
 <li><a href="#11-Project-Background" title="1.1. Project Background">1.1. Project Background</a></li>
-<li><a href="#12-Related-Work" title="1.2. Related Work">1.2. Related Work</a></li>
-<li><a href="#13-Research-Questions" title="1.3. Research Questions">1.3. Research Questions</a></li>
+<li class=""><a href="#12-Related-Work" title="1.2. Related Work">1.2. Related Work</a></li>
+<li class=""><a href="#13-Research-Questions" title="1.3. Research Questions">1.3. Research Questions</a></li>
 </ul>
 </li>
-<li><a href="#2-Methodology" title="2. Methodology">2. Methodology</a><ul class="nav">
-<li><a href="#21-Syringe-Pose-Definition" title="2.1 Syringe Pose Definition">2.1 Syringe Pose Definition</a></li>
-<li><a href="#22-Dataset-Construction" title="2.2 Dataset Construction">2.2 Dataset Construction</a></li>
-<li><a href="#23-Data-Augmentation" title="2.3 Data Augmentation">2.3 Data Augmentation</a></li>
+<li class=""><a href="#2-Methodology" title="2. Methodology">2. Methodology</a><ul class="nav">
+<li class=""><a href="#21-Syringe-Pose-Definition" title="2.1 Syringe Pose Definition">2.1 Syringe Pose Definition</a></li>
+<li class=""><a href="#22-Dataset-Construction" title="2.2 Dataset Construction">2.2 Dataset Construction</a></li>
+<li class=""><a href="#23-Data-Augmentation" title="2.3 Data Augmentation">2.3 Data Augmentation</a></li>
 <li><a href="#24-Training-Setup" title="2.4 Training Setup">2.4 Training Setup</a></li>
 </ul>
 </li>
 <li><a href="#3-Experiments-and-Results" title="3. Experiments and Results">3. Experiments and Results</a><ul class="nav">
-<li><a href="#31-Network-Architectures-YOLO-vs-POET" title="3.1 Network Architectures (YOLO vs POET)">3.1 Network Architectures (YOLO vs POET)</a></li>
-<li><a href="#32-Model-Training" title="3.2 Model Training">3.2 Model Training</a></li>
-<li><a href="#33-Evaluation-Metrics" title="3.3 Evaluation Metrics">3.3 Evaluation Metrics</a></li>
-<li><a href="#34-Quantitative-Results" title="3.4 Quantitative Results">3.4 Quantitative Results</a></li>
-<li><a href="#35-Qualitative-Results" title="3.5 Qualitative Results">3.5 Qualitative Results</a></li>
+<li><a href="#31-Network-Architectures" title="3.1 Network Architectures">3.1 Network Architectures</a></li>
+<li><a href="#32-Evaluation-Metrics" title="3.2 Evaluation Metrics">3.2 Evaluation Metrics</a></li>
+<li><a href="#33-Quantitative-Results" title="3.3 Quantitative Results">3.3 Quantitative Results</a></li>
+<li><a href="#34-Qualitative-Results" title="3.4 Qualitative Results">3.4 Qualitative Results</a></li>
 </ul>
 </li>
 <li><a href="#4-Discussion" title="4. Discussion">4. Discussion</a></li>
 <li><a href="#5-Conclusion" title="5. Conclusion">5. Conclusion</a></li>
-<li><a href="#6-Future-Works" title="6. Future Works">6. Future Works</a></li>
 <li><a href="#Acknowledgements" title="Acknowledgements">Acknowledgements</a></li>
 <li><a href="#References" title="References">References</a></li>
-<li><a href="#Appendix" title="Appendix">Appendix</a><ul class="nav">
-<li><a href="#A1-Dataset-Distribution" title="A1. Dataset Distribution">A1. Dataset Distribution</a></li>
-<li><a href="#A2-Evaluation-Metrics" title="A2. Evaluation Metrics">A2. Evaluation Metrics</a></li>
-<li><a href="#A3-Additional-Experiments" title="A3. Additional Experiments">A3. Additional Experiments</a></li>
-</ul>
-</li>
+<li><a href="#Appendix-1-POET-Per-Density-Evaluation" title="Appendix 1: POET Per-Density Evaluation">Appendix 1: POET Per-Density Evaluation</a></li>
 </ul>
 </li>
 </ul>
@@ -1247,45 +1036,37 @@ Table A2: Single Syringe Images (n=288)
     <div id="ui-toc-affix" class="ui-affix-toc ui-toc-dropdown unselectable hidden-print affix" data-spy="affix" style="top: 17px; left: 1090px;">
         <div class="toc"><ul class="nav">
 <li class="active"><a href="#Multi-Instance-Syringe-Pose-Estimation" title="Multi-Instance Syringe Pose Estimation">Multi-Instance Syringe Pose Estimation</a><ul class="nav">
-<li><a href="#1-Introduction" title="1. Introduction">1. Introduction</a><ul class="nav">
+<li class=""><a href="#1-Introduction" title="1. Introduction">1. Introduction</a><ul class="nav">
 <li><a href="#11-Project-Background" title="1.1. Project Background">1.1. Project Background</a></li>
-<li><a href="#12-Related-Work" title="1.2. Related Work">1.2. Related Work</a></li>
-<li><a href="#13-Research-Questions" title="1.3. Research Questions">1.3. Research Questions</a></li>
+<li class=""><a href="#12-Related-Work" title="1.2. Related Work">1.2. Related Work</a></li>
+<li class=""><a href="#13-Research-Questions" title="1.3. Research Questions">1.3. Research Questions</a></li>
 </ul>
 </li>
-<li><a href="#2-Methodology" title="2. Methodology">2. Methodology</a><ul class="nav">
-<li><a href="#21-Syringe-Pose-Definition" title="2.1 Syringe Pose Definition">2.1 Syringe Pose Definition</a></li>
-<li><a href="#22-Dataset-Construction" title="2.2 Dataset Construction">2.2 Dataset Construction</a></li>
-<li><a href="#23-Data-Augmentation" title="2.3 Data Augmentation">2.3 Data Augmentation</a></li>
+<li class=""><a href="#2-Methodology" title="2. Methodology">2. Methodology</a><ul class="nav">
+<li class=""><a href="#21-Syringe-Pose-Definition" title="2.1 Syringe Pose Definition">2.1 Syringe Pose Definition</a></li>
+<li class=""><a href="#22-Dataset-Construction" title="2.2 Dataset Construction">2.2 Dataset Construction</a></li>
+<li class=""><a href="#23-Data-Augmentation" title="2.3 Data Augmentation">2.3 Data Augmentation</a></li>
 <li><a href="#24-Training-Setup" title="2.4 Training Setup">2.4 Training Setup</a></li>
 </ul>
 </li>
 <li><a href="#3-Experiments-and-Results" title="3. Experiments and Results">3. Experiments and Results</a><ul class="nav">
-<li><a href="#31-Network-Architectures-YOLO-vs-POET" title="3.1 Network Architectures (YOLO vs POET)">3.1 Network Architectures (YOLO vs POET)</a></li>
-<li><a href="#32-Model-Training" title="3.2 Model Training">3.2 Model Training</a></li>
-<li><a href="#33-Evaluation-Metrics" title="3.3 Evaluation Metrics">3.3 Evaluation Metrics</a></li>
-<li><a href="#34-Quantitative-Results" title="3.4 Quantitative Results">3.4 Quantitative Results</a></li>
-<li><a href="#35-Qualitative-Results" title="3.5 Qualitative Results">3.5 Qualitative Results</a></li>
+<li><a href="#31-Network-Architectures" title="3.1 Network Architectures">3.1 Network Architectures</a></li>
+<li><a href="#32-Evaluation-Metrics" title="3.2 Evaluation Metrics">3.2 Evaluation Metrics</a></li>
+<li><a href="#33-Quantitative-Results" title="3.3 Quantitative Results">3.3 Quantitative Results</a></li>
+<li><a href="#34-Qualitative-Results" title="3.4 Qualitative Results">3.4 Qualitative Results</a></li>
 </ul>
 </li>
 <li><a href="#4-Discussion" title="4. Discussion">4. Discussion</a></li>
 <li><a href="#5-Conclusion" title="5. Conclusion">5. Conclusion</a></li>
-<li><a href="#6-Future-Works" title="6. Future Works">6. Future Works</a></li>
 <li><a href="#Acknowledgements" title="Acknowledgements">Acknowledgements</a></li>
 <li><a href="#References" title="References">References</a></li>
-<li><a href="#Appendix" title="Appendix">Appendix</a><ul class="nav">
-<li><a href="#A1-Dataset-Distribution" title="A1. Dataset Distribution">A1. Dataset Distribution</a></li>
-<li><a href="#A2-Evaluation-Metrics" title="A2. Evaluation Metrics">A2. Evaluation Metrics</a></li>
-<li><a href="#A3-Additional-Experiments" title="A3. Additional Experiments">A3. Additional Experiments</a></li>
-</ul>
-</li>
+<li><a href="#Appendix-1-POET-Per-Density-Evaluation" title="Appendix 1: POET Per-Density Evaluation">Appendix 1: POET Per-Density Evaluation</a></li>
 </ul>
 </li>
 </ul>
 </div><div class="toc-menu"><a class="expand-toggle" href="#">Expand all</a><a class="back-to-top" href="#">Back to top</a><a class="go-to-bottom" href="#">Go to bottom</a></div>
     </div>
     <script src="index_files/jquery.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="index_files/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous" defer="defer"></script>
     <script src="index_files/gist-embed.min.js" integrity="sha256-KyF2D6xPIJUW5sUDSs93vWyZm+1RzIpKCexxElmxl8g=" crossorigin="anonymous" defer="defer"></script>
     <script>
@@ -1431,6 +1212,7 @@ Table A2: Single Syringe Images (n=288)
             }, 100, "linear");
         }
     </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
 
 
 
